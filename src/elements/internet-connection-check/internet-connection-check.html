@@ -1,0 +1,136 @@
+<!--
+Internet and server connection statuses checking element
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-request.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="internet-connection-check">
+  <template>
+    <style>
+      *[hidden] {
+        display: none !important;
+      }
+      :host(:not([online])) {
+        display: none;
+      }
+      .connection-status {
+        padding: 15px;
+        margin-bottom: 20px;
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+      .msg {
+        line-height: 24px;
+        margin-left: 15px;
+      }
+    </style>
+
+    <div class="connection-status" hidden$="[[!showOfflineWarning]]">
+      <iron-icon icon="report"></iron-icon>
+      <span class="msg">
+        <strong>No internet connection!</strong>
+        You are now offline.
+      </span>
+    </div>
+  </template>
+
+  <script>
+    class InternetConnectionCheck extends Polymer.Element {
+      static get is() { return 'internet-connection-check'; }
+
+      static get properties() {
+        return {
+          online: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: true
+          },
+          serverStatusUrl: String,
+          serverAvailable: {
+            type: Boolean,
+            value: true
+          },
+          showOfflineWarning: Boolean,
+          browserStatusInterval: {
+            type: Number,
+            value: 5000
+          },
+          serverStatusInterval: {
+            type: Number,
+            value: 60000
+          }
+        }
+      }
+
+      static get observers() {
+        return [
+          '_observeConnectionStatus(online, serverAvailable)'
+        ];
+      }
+
+      constructor() {
+        super();
+
+        // check browser connectivity every browserStatusInterval seconds
+        var connectionCheck = setInterval(this._checkInternetConnection.bind(this), this.browserStatusInterval);
+        this._checkInternetConnection();
+
+        // check server status every serverStatusInterval s
+        var serverCheck = setInterval(this._checkServerStatus.bind(this), this.serverStatusInterval);
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        // check server status, this is executed once the element is ready and the server status
+        // should/could be updated on the next connection refused or using an interval check
+        this._checkServerStatus();
+      }
+
+      _checkInternetConnection() {
+        var connectionStatus = navigator.onLine;
+        if (connectionStatus) {
+          this.set('online', true);
+        } else {
+          this.set('online', false);
+        }
+      }
+
+      _checkServerStatus() {
+        if (!!!this.serverStatusUrl) {
+          return;
+        }
+        var request = /** @type {!IronRequestElement} */ (document.createElement('iron-request'));
+        var requestOptions = {
+          url: this.serverStatusUrl,
+          method: 'GET'
+        }
+        var self = this;
+        request.completes.then(function(response) {
+          self.set('serverAvailable', true);
+        }).catch(function(error) {
+          // console.log(self.request, error);
+          self.set('serverAvailable', false);
+        });
+        request.send(requestOptions);
+      }
+
+      _observeConnectionStatus(online, serverAvailable) {
+        if (typeof online !== 'undefined' && typeof serverAvailable !== 'undefined') {
+          if (online && serverAvailable) {
+            this.set('showOfflineWarning', false);
+          } else {
+            this.set('showOfflineWarning', true);
+          }
+        }
+      }
+    }
+
+    window.customElements.define(InternetConnectionCheck.is, InternetConnectionCheck);
+  </script>
+</dom-module>

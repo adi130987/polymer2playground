@@ -1,0 +1,45 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="app-popup-styles">
+  <template>
+    <style>
+      :host {
+        @apply --layout-fit;
+        @apply --layout-horizontal;
+        @apply --layout-center-justified;
+        @apply --layout-center;
+        z-index: 100;
+        background-color: rgba(255, 255, 255, .85);
+      }
+      :host(:not([popup-active])) {
+        display: none !important;
+      }
+
+      .popup-body {
+        position: relative;
+        background-color: #fff;
+        padding: 24px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        color: #212529;
+        font-size: 18px;
+      }
+
+      .popup-body .popup-actions {
+        @apply --layout-horizontal;
+        @apply --layout-center-justified;
+      }
+
+      paper-fab {
+        position: absolute;
+        top: -20px;
+        right: -20px;
+
+        --paper-fab-background: var(--accent-color);
+        --paper-fab-keyboard-focus-background: var(--dark-accent-color);
+      }
+    </style>
+  </template>
+</dom-module>

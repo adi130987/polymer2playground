@@ -1,0 +1,61 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+
+<link rel="import" href="../../styles/buttons-styles.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="app-popup-styles.html">
+
+<!--
+Make sure the popup parent element has position relative.
+-->
+
+<dom-module id="app-popup">
+  <template>
+    <style include="common-styles buttons-styles app-popup-styles">
+    </style>
+
+    <paper-material class="popup-body" elevation="3">
+      <paper-fab mini icon="close" title="close" on-click="close"></paper-fab>
+      <slot name="content"></slot>
+      <div class="popup-actions">
+        <slot name="actions"></slot>
+      </div>
+    </paper-material>
+
+
+  </template>
+
+  <script>
+    class AppPopup extends Polymer.Element {
+
+      static get is() {
+        return 'app-popup';
+      }
+
+      static get properties() {
+        return {
+          popupActive: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          }
+        };
+      }
+
+      open() {
+        this.set('popupActive', true);
+      }
+
+      close() {
+        this.set('popupActive', false);
+      }
+
+    }
+
+    window.customElements.define(AppPopup.is, AppPopup);
+  </script>
+</dom-module>
+

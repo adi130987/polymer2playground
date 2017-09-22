@@ -1,0 +1,244 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../bower_components/app-layout/app-grid/app-grid-style.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../../styles/grid-table-styles.html">
+<link rel="import" href="../../styles/buttons-styles.html">
+
+<link rel="import" href="employee-form.html">
+<link rel="import" href="../app-popup/app-popup.html">
+
+<dom-module id="employees-list">
+  <template>
+    <style include="app-grid-style common-styles grid-table-styles buttons-styles">
+      :host {
+        display: block;
+        position: relative;
+
+        --app-grid-columns: 6;
+      }
+
+      .app-grid .item:last-child {
+        @apply --app-grid-expandible-item;
+      }
+
+      #employeeForm, #list-filters {
+        margin-bottom: 24px;
+      }
+    </style>
+
+    <h1>Company Employees</h1>
+
+    <employees-form id="employeeForm"></employees-form>
+
+    <template is="dom-if" if="[[!totalItems]]">
+      <p class="empty-list-warning">No employees found!</p>
+    </template>
+
+    <div id="list-filters">
+      <paper-input label="Serach by Full Name and Email"
+                   value="{{searchString}}">
+        <iron-icon slot="prefix" icon="search"></iron-icon>
+      </paper-input>
+    </div>
+
+    <template is="dom-if" if="[[totalItems]]">
+
+      <div class="app-grid table-header">
+
+        <div class="item col-header"># No</div>
+        <div class="item col-header">Full Name</div>
+        <div class="item col-header">Address</div>
+        <div class="item col-header">Phone</div>
+        <div class="item col-header">Email</div>
+        <div class="item col-header"><!-- actions column --></div>
+      </div>
+      <template is="dom-repeat" items="[[pageItems]]">
+        <div class="app-grid table-row">
+          <div class="item">[[_prepareValue(item.id)]]</div>
+          <div class="item">[[_prepareValue(item.name)]]</div>
+          <div class="item">[[_prepareValue(item.address)]]</div>
+          <div class="item">[[_prepareValue(item.phone)]]</div>
+          <div class="item">[[_prepareValue(item.email)]]</div>
+          <div class="item actions-col">
+            <paper-icon-button raised icon="create" data-args$="[[index]]"
+                               on-click="_openEditPopup"></paper-icon-button>
+            <paper-icon-button raised icon="delete" data-args$="[[item.id]]"
+                               on-click="_openDeleteConfirmation"></paper-icon-button>
+          </div>
+        </div>
+      </template>
+
+    </template>
+
+    <app-popup id="deleteConfirmationPopup">
+      <p slot="content">Are you sure you want to delete this item?</p>
+      <span slot="actions">
+        <paper-button class="secondary-btn" raised on-click="_hideDeleteConfirmation">No</paper-button>
+        <paper-button class="primary-btn" raised on-click="_onConfirmDeleteAction">Yes</paper-button>
+      </span>
+    </app-popup>
+
+    <app-popup id="editPopup">
+      <employees-form id="editEmployeeForm"
+                      slot="content"
+                      save-btn-label="Save changes"
+                      save-btn-icon="save"
+                      employee="[[currentEditableItem]]"
+                      inside-popup></employees-form>
+    </app-popup>
+
+  </template>
+
+  <script>
+    window.Polymer2PlaygroundAppGlobals = window.Polymer2PlaygroundAppGlobals || {};
+
+    class EmployeesList extends Polymer.Element {
+
+      static get is() {
+        return 'employees-list';
+      }
+
+      static get properties() {
+        return {
+          pageItems: {
+            type: Array,
+            value: []
+          },
+          offset: {
+            type: Number,
+            value: 0
+          },
+          limit: {
+            type: Number,
+            value: 15
+          },
+          page: {
+            type: Number,
+            value: 1
+          },
+          totalItems: {
+            type: Number,
+            value: 0
+          },
+          deleteId: {
+            type: Number
+          },
+          currentEditableItem: Object,
+          searchString: {
+            type: String,
+            observer: '_queryListData'
+          }
+
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.$.employeeForm.addEventListener('refresh-employees-list', this._queryListData.bind(this));
+        this.$.editEmployeeForm.addEventListener('refresh-employees-list', this._itemEditingComplete.bind(this));
+        // load list data
+        this._queryListData();
+      }
+
+      _queryListData() {
+        try {
+          let self = this;
+          let collection = Polymer2PlaygroundAppGlobals.DexieDb.employees;
+          let query = collection.orderBy('id').reverse();
+          if (this.searchString) {
+            let self = this;
+            query = query.filter(function(employee) {
+              return employee.name.search(self.searchString) > -1 || employee.email.search(self.searchString) > -1;
+            });
+          }
+
+          Dexie.ignoreTransaction(function() {
+            query.count(function(count) {
+              self.set('totalItems', count);
+            });
+          });
+
+          // TODO: implement pagination
+          // query.offset(this.offset).limit(this.limit).toArray
+          query.toArray(this._handleQueryResultData.bind(this));
+        } catch (err) {
+          console.error('[employees-list] Query error...', err);
+        }
+      }
+
+      _handleQueryResultData(result) {
+        this.set('pageItems', result);
+      }
+
+      _prepareValue(value) {
+        return value || 'N/A';
+      }
+
+      _openDeleteConfirmation(e) {
+        let itemId = parseInt(e.target.getAttribute('data-args'), 10);
+        this.set('deleteId', itemId);
+        this.$.deleteConfirmationPopup.open();
+      }
+
+      _hideDeleteConfirmation() {
+        this.$.deleteConfirmationPopup.close();
+      }
+
+      _onConfirmDeleteAction() {
+        if (this.deleteId > 0) {
+          this._deleteItem(this.deleteId);
+        }
+      }
+
+      _deleteItem(id) {
+        let self = this;
+        Polymer2PlaygroundAppGlobals.DexieDb.transaction('rw', 'employees', function() {
+          Polymer2PlaygroundAppGlobals.DexieDb.employees.where('id').equals(id).delete();
+        }).then(function() {
+          self._resetIdToDelete();
+          self._hideDeleteConfirmation();
+          self._queryListData();
+        }).catch(function(err) {
+          // TODO: successfully deleted toast msg
+          console.error('[employees-list] Delete failed...', err);
+        });
+      }
+
+      _resetIdToDelete() {
+        this.set('deleteId', 0);
+      }
+
+      _hideEditPopup() {
+        this.$.editPopup.close();
+        this.set('currentEditableItem', {});
+      }
+
+      _showEditPopup() {
+        this.$.editPopup.open();
+      }
+
+      _openEditPopup(e) {
+        let index = parseInt(e.target.getAttribute('data-args'), 10);
+        let item = this.pageItems[index];
+        if (!item) {
+          // TODO: cannot edit toast msg
+          return;
+        }
+        this.set('currentEditableItem', Object.assign({}, item));
+        this._showEditPopup();
+      }
+
+      _itemEditingComplete() {
+        this._queryListData();
+        this._hideEditPopup();
+      }
+
+    }
+
+    window.customElements.define(EmployeesList.is, EmployeesList);
+  </script>
+</dom-module>

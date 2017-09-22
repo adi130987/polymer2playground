@@ -1,0 +1,192 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/app-layout/app-grid/app-grid-style.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/communication-icons.html">
+
+<link rel="import" href="../../styles/buttons-styles.html">
+<link rel="import" href="../../styles/common-styles.html">
+
+<dom-module id="employees-form">
+  <template>
+    <style include="app-grid-style common-styles buttons-styles">
+      :host {
+        display: block;
+
+        --app-grid-columns: 5;
+        --app-grid-gutter: 16px;
+      }
+      :host([inside-popup]) {
+        --app-grid-columns: 2;
+        --app-grid-expandible-item-columns: 2;
+      }
+      :host([inside-popup]) paper-button {
+        margin-top: 32px;
+      }
+      .app-grid {
+        margin: 0 -16px;
+      }
+
+      .app-grid .item:last-child {
+        @apply --app-grid-expandible-item;
+      }
+
+      .actions {
+        @apply --layout-vertical;
+        @apply --layout-end-justified;
+        padding-bottom: 11px;
+      }
+    </style>
+
+    <div class="app-grid">
+      <div class="item">
+        <paper-input label="Full Name"
+                     placeholder="&#8212;"
+                     value="{{employee.name}}"
+                     required
+                     error-message="Full name is required">
+          <iron-icon slot="prefix" icon="account-box"></iron-icon>
+        </paper-input>
+      </div>
+      <div class="item">
+        <paper-input label="Address"
+                     placeholder="&#8212;"
+                     value="{{employee.address}}"
+                     required
+                     error-message="Address is required">
+          <iron-icon slot="prefix" icon="communication:location-on"></iron-icon>
+        </paper-input>
+      </div>
+      <div class="item">
+        <paper-input label="Phone"
+                     placeholder="&#8212;"
+                     value="{{employee.phone}}">
+          <iron-icon slot="prefix" icon="communication:call"></iron-icon>
+        </paper-input>
+      </div>
+      <div class="item">
+        <paper-input label="Email"
+                     placeholder="&#8212;"
+                     value="{{employee.email}}"
+                     required
+                     error-message="Email is required">
+          <iron-icon slot="prefix" icon="communication:email"></iron-icon>
+        </paper-input>
+      </div>
+      <div class="item actions">
+        <paper-button class="primary-btn"
+                      raised
+                      on-click="_saveEmployee">
+          <iron-icon icon="[[saveBtnIcon]]"></iron-icon>
+          [[saveBtnLabel]]
+        </paper-button>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+
+    window.Polymer2PlaygroundAppGlobals = window.Polymer2PlaygroundAppGlobals || {};
+
+    class EmployeeForm extends Polymer.Element {
+
+      static get is() {
+        return 'employees-form';
+      }
+
+      static get properties() {
+        return {
+          employeeModel: {
+            type: Object,
+            value: {
+              id: null,
+              name: null,
+              address: null,
+              phone: null,
+              email: null
+            }
+          },
+          employee: {
+            type: Object
+          },
+          saveBtnLabel: {
+            type: String,
+            value: 'Add new Employee'
+          },
+          saveBtnIcon: {
+            type: String,
+            value: 'add'
+          }
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this._initNewEmployeeData();
+      }
+
+      _saveEmployee() {
+        if (!this._validateEmployee()) {
+          console.log('[employee form] Invalid data, cannot save...');
+          return;
+        }
+        let isAddAction = !this.employee.id;
+        let employeeData = Object.assign({}, this.employee);
+        let self = this;
+        try {
+          Polymer2PlaygroundAppGlobals.DexieDb.transaction('rw', 'employees', function() {
+            if (isAddAction) {
+              // add
+              delete employeeData.id;
+              Polymer2PlaygroundAppGlobals.DexieDb.employees.add(employeeData);
+            } else {
+              // update
+              Polymer2PlaygroundAppGlobals.DexieDb.employees.put(employeeData);
+            }
+          }).then(function(result) {
+            // transaction succeeded
+            self.dispatchEvent(new CustomEvent('refresh-employees-list',
+                {bubbles: true, composed: true}));
+            self._initNewEmployeeData();
+            // TODO: uccessfully added toast msg
+          }).catch(function(error) {
+            // transaction failed
+            console.error('[employee form] Save employee action failed...', err);
+          });
+        } catch (err) {
+          console.error('[employee form] Save employee failed...', err);
+        }
+
+      }
+
+      _validateEmployee() {
+        let fields = this._getEmployeeFields();
+        let validEmployee = true;
+        let i;
+        for (i = 0; i < fields.length; i++) {
+          if (!fields[i].validate()) {
+            validEmployee = false;
+          }
+        }
+        if (fields.length === 0) {
+          validEmployee = false;
+        }
+        return validEmployee;
+      }
+
+      _getEmployeeFields() {
+        return this.shadowRoot.querySelectorAll('paper-input') || [];
+      }
+
+      _initNewEmployeeData() {
+        this.set('employee', Object.assign({}, this.employeeModel));
+      }
+
+    }
+
+    window.customElements.define(EmployeeForm.is, EmployeeForm);
+  </script>
+</dom-module>
