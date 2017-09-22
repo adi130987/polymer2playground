@@ -1,7 +1,6 @@
 # Polymer 2 Playground App
 
-A simple app based on polymer starter kit v3.1.0.
-I used the app as demo for a Polymer 2 presentation.
+Demo app, a simple app based on polymer starter kit v3.1.0.
 
 Features:
 
@@ -11,7 +10,7 @@ Features:
 
 ### Install
 
-* clone git remo
+* clone git repo
 * install `npm`, `polymer-cli`, `bower`
 * inside app root folder run: `npm install`, `bower install`
 * run the app: `polymer serve`
