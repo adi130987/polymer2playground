@@ -16,6 +16,8 @@
     "require-jsdoc": "off"
   },
   "globals": {
-    "Polymer": true
+    "Polymer": true,
+    "P2PlaygroundApp": true,
+    "Dexie": true
   }
 }

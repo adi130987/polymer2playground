@@ -89,8 +89,6 @@
 
   <script>
 
-    window.Polymer2PlaygroundAppGlobals = window.Polymer2PlaygroundAppGlobals || {};
-
     class EmployeeForm extends Polymer.Element {
 
       static get is() {
@@ -137,14 +135,14 @@
         let employeeData = Object.assign({}, this.employee);
         let self = this;
         try {
-          Polymer2PlaygroundAppGlobals.DexieDb.transaction('rw', 'employees', function() {
+          P2PlaygroundApp.DexieDb.transaction('rw', 'employees', function() {
             if (isAddAction) {
               // add
               delete employeeData.id;
-              Polymer2PlaygroundAppGlobals.DexieDb.employees.add(employeeData);
+              P2PlaygroundApp.DexieDb.employees.add(employeeData);
             } else {
               // update
-              Polymer2PlaygroundAppGlobals.DexieDb.employees.put(employeeData);
+              P2PlaygroundApp.DexieDb.employees.put(employeeData);
             }
           }).then(function(result) {
             // transaction succeeded

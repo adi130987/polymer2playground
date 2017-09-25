@@ -4,12 +4,17 @@
 <link rel="import" href="../../../bower_components/app-layout/app-grid/app-grid-style.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 
+<!-- import styles -->
 <link rel="import" href="../../styles/common-styles.html">
 <link rel="import" href="../../styles/grid-table-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
 
+<!-- import app custom elements -->
 <link rel="import" href="employee-form.html">
 <link rel="import" href="../app-popup/app-popup.html">
+
+<!-- import mixins -->
+<link rel="import" href="employee-dexie-service.html">
 
 <dom-module id="employees-list">
   <template>
@@ -94,9 +99,7 @@
   </template>
 
   <script>
-    window.Polymer2PlaygroundAppGlobals = window.Polymer2PlaygroundAppGlobals || {};
-
-    class EmployeesList extends Polymer.Element {
+    class EmployeesList extends P2PlaygroundApp.DexieService(Polymer.Element) {
 
       static get is() {
         return 'employees-list';
@@ -138,8 +141,11 @@
 
       connectedCallback() {
         super.connectedCallback();
-        this.$.employeeForm.addEventListener('refresh-employees-list', this._queryListData.bind(this));
-        this.$.editEmployeeForm.addEventListener('refresh-employees-list', this._itemEditingComplete.bind(this));
+        this.$.employeeForm.addEventListener('refresh-employees-list',
+            this._queryListData.bind(this));
+
+        this.$.editEmployeeForm.addEventListener('refresh-employees-list',
+            this._itemEditingComplete.bind(this));
         // load list data
         this._queryListData();
       }
@@ -147,12 +153,13 @@
       _queryListData() {
         try {
           let self = this;
-          let collection = Polymer2PlaygroundAppGlobals.DexieDb.employees;
+          let collection = P2PlaygroundApp.DexieDb.employees;
           let query = collection.orderBy('id').reverse();
           if (this.searchString) {
             let self = this;
             query = query.filter(function(employee) {
-              return employee.name.search(self.searchString) > -1 || employee.email.search(self.searchString) > -1;
+              return employee.name.search(self.searchString) > -1
+                  || employee.email.search(self.searchString) > -1;
             });
           }
 
@@ -196,8 +203,8 @@
 
       _deleteItem(id) {
         let self = this;
-        Polymer2PlaygroundAppGlobals.DexieDb.transaction('rw', 'employees', function() {
-          Polymer2PlaygroundAppGlobals.DexieDb.employees.where('id').equals(id).delete();
+        P2PlaygroundApp.DexieDb.transaction('rw', 'employees', function() {
+          P2PlaygroundApp.DexieDb.employees.where('id').equals(id).delete();
         }).then(function() {
           self._resetIdToDelete();
           self._hideDeleteConfirmation();

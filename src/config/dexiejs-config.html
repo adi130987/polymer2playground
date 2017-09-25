@@ -1,9 +1,9 @@
 <link rel="import" href="../external-libraries/dexie.html">
 <script>
-  window.Polymer2PlaygroundAppGlobals = window.Polymer2PlaygroundAppGlobals || {};
+  window.P2PlaygroundApp = window.P2PlaygroundApp || {};
 
-  Polymer2PlaygroundAppGlobals.DexieDb = new Dexie('Polymer2PlaygroundApp');
-  Polymer2PlaygroundAppGlobals.DexieDb.version(1).stores({
+  P2PlaygroundApp.DexieDb = new Dexie('Polymer2PlaygroundApp');
+  P2PlaygroundApp.DexieDb.version(1).stores({
     employees: '++id, name, address, phone, &email'
   });
 </script>
