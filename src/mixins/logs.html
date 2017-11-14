@@ -1,0 +1,73 @@
+
+<script>
+  window.P2PlaygroundApp = window.P2PlaygroundApp || {};
+  window.P2PlaygroundApp.Mixins = window.P2PlaygroundApp.Mixins || {};
+
+  /*
+   * Logging mixin. Make sure you set window.P2PlaygroundApp.LogLevel to the level you need in the app
+   * Available log levels: OFF, ERROR, WARN, INFO
+   * @polymer
+   * @mixinFunction
+   */
+  P2PlaygroundApp.Mixins.Logs = Polymer.dedupingMixin((superClass) => class extends superClass {
+
+    static get properties() {
+      return {
+        logsLevel: {
+          type: String,
+          value: 'OFF'
+        }
+      };
+    }
+
+    _getLogLevel() {
+      let availableLogLevels = ['OFF', 'ERROR', 'WARN', 'INFO'];
+      if (window.P2PlaygroundApp.LogLevel && availableLogLevels.indexOf(window.P2PlaygroundApp.LogLevel) === -1) {
+        // wrong log level set
+        return 'OFF';
+      }
+      return window.P2PlaygroundApp.LogLevel || 'OFF';
+    }
+
+    _initAndGetLogLevel(forceLevelInit) {
+      if (!this.logsLevel || forceLevelInit) {
+        this.logsLevel = this._getLogLevel();
+      }
+      return this.logsLevel;
+    }
+
+    _getEtoolsLogMessages(logPrefix, message, messagePrefix) {
+      let currentElementName = this.is ? ('[' + this.is + ']') : '';
+      let msg = '[' + logPrefix + ']' + currentElementName;
+      if (messagePrefix) {
+        msg += '[' + messagePrefix.toString() + '] ';
+      }
+      msg += message;
+      return msg;
+    }
+
+    _canLog(levels, forceLevelInit) {
+      return levels.indexOf(this._initAndGetLogLevel(forceLevelInit)) > -1;
+    }
+
+    logError(message, messagePrefix, other, forceLevelInit) {
+      if (this._canLog(['ERROR', 'WARN', 'INFO'], forceLevelInit)) {
+        console.error(this._getEtoolsLogMessages('ERROR', message, messagePrefix), other ? other : ''); // eslint-disable-line
+      }
+    }
+
+    logWarn(message, messagePrefix, other, forceLevelInit) {
+      if (this._canLog(['WARN', 'INFO'], forceLevelInit)) {
+        console.warn(this._getEtoolsLogMessages('WARN', message, messagePrefix), other ? other : ''); // eslint-disable-line
+      }
+    }
+
+    logInfo(message, messagePrefix, other, forceLevelInit) {
+      if (this._canLog(['INFO'], forceLevelInit)) {
+        console.log(this._getEtoolsLogMessages('INFO', message, messagePrefix), other ? other : ''); // eslint-disable-line
+      }
+    }
+
+  });
+
+</script>

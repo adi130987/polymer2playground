@@ -11,6 +11,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="styles/shared-styles.html">
 
+<link rel="import" href="mixins/request.html">
+
 <dom-module id="my-view3">
   <template>
     <style include="shared-styles">
@@ -22,16 +24,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <div class="card">
-      <div class="circle">3</div>
-      <h1>View Three</h1>
-      <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
+      <h1>Polymer mixins tests</h1>
+      <p>Open console to see the logs...</p>
     </div>
   </template>
 
   <script>
-    class MyView3 extends Polymer.Element {
+
+    class MyView3 extends P2PlaygroundApp.Mixins.Request(Polymer.Element) {
       static get is() { return 'my-view3'; }
+
+      connectedCallback() {
+        super.connectedCallback();
+        console.log('Test requests...');
+        this._makeFirstTestRequestUsingResttesttest();
+      }
+
+      _makeFirstTestRequestUsingResttesttest() {
+        console.log('Start GET \'https://httpbin.org/get\' request...');
+        this.httpRequest({url: 'https://httpbin.org/get'})
+          .then((response) => {
+            console.log('Response received: ', response)
+          })
+          .catch((error) => {
+            console.error('Request failed!', error);
+          });
+      }
+
     }
 
     window.customElements.define(MyView3.is, MyView3);

@@ -109,7 +109,7 @@ Internet and server connection statuses checking element
         var requestOptions = {
           url: this.serverStatusUrl,
           method: 'GET'
-        }
+        };
         var self = this;
         request.completes.then(function(response) {
           self.set('serverAvailable', true);
