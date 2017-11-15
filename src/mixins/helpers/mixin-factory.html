@@ -1,6 +1,6 @@
 <script>
   class PolymerMixinFactory {
-    combineMixins(mixinsArray) {
+    combineMixins(mixinsArray, superClass) {
       if (mixinsArray instanceof Array === false) {
         throw new Error('[PolymerMixinFactory] mixinsArray is not Array!');
       }
@@ -10,7 +10,7 @@
       mixinsArray.forEach((m) => {
         if (!compositeMixin) {
           // start by using PolymerElement as mixins superClass
-          compositeMixin = m(PolymerElement);
+          compositeMixin = m(superClass);
         } else {
           compositeMixin = m(compositeMixin);
         }

@@ -1,0 +1,320 @@
+<script>
+  window.P2PlaygroundApp.Mixins = window.P2PlaygroundApp.Mixins || {};
+
+  /*
+   * Dummy data property
+   * @polymer
+   * @mixinFunction
+   */
+  P2PlaygroundApp.Mixins.DummyData = Polymer.dedupingMixin((superClass) => class extends superClass {
+    static get properties() {
+      return {
+        employeesDummyData: {
+          type: Array,
+          value: [{
+            "id": 1,
+            "name": "Jeri Hodge",
+            "email": "jeri.hodge@notanemailaddress.org",
+            "phone": "+1 (874) 485-2659",
+            "address": "993 Albemarle Road, Carlton, Florida, 833"
+          }, {
+            "id": 2,
+            "name": "Bridges Castaneda",
+            "email": "bridges.castaneda@notanemailaddress.org",
+            "phone": "+1 (856) 549-2020",
+            "address": "221 Irwin Street, Maury, Texas, 5316"
+          }, {
+            "id": 3,
+            "name": "Olga Bryant",
+            "email": "olga.bryant@notanemailaddress.org",
+            "phone": "+1 (859) 530-2034",
+            "address": "370 Beard Street, Kenvil, Wisconsin, 5603"
+          }, {
+            "id": 4,
+            "name": "Wilda Dixon",
+            "email": "wilda.dixon@notanemailaddress.org",
+            "phone": "+1 (993) 592-3641",
+            "address": "810 Belvidere Street, Albany, Tennessee, 748"
+          }, {
+            "id": 5,
+            "name": "Amelia Benjamin",
+            "email": "amelia.benjamin@notanemailaddress.org",
+            "phone": "+1 (873) 503-2185",
+            "address": "599 Amboy Street, Iola, North Dakota, 4502"
+          }, {
+            "id": 6,
+            "name": "Brock Chase",
+            "email": "brock.chase@notanemailaddress.org",
+            "phone": "+1 (966) 403-3619",
+            "address": "251 Beayer Place, Emison, California, 6563"
+          }, {
+            "id": 7,
+            "name": "Bush Park",
+            "email": "bush.park@notanemailaddress.org",
+            "phone": "+1 (982) 443-2909",
+            "address": "284 Montauk Avenue, Jacksonwald, South Dakota, 7151"
+          }, {
+            "id": 8,
+            "name": "Burton Atkinson",
+            "email": "burton.atkinson@notanemailaddress.org",
+            "phone": "+1 (841) 521-3217",
+            "address": "238 Flatbush Avenue, Klondike, Arkansas, 5737"
+          }, {
+            "id": 9,
+            "name": "Kelley Ruiz",
+            "email": "kelley.ruiz@notanemailaddress.org",
+            "phone": "+1 (906) 507-2328",
+            "address": "451 Autumn Avenue, Tooleville, Hawaii, 2707"
+          }, {
+            "id": 10,
+            "name": "Wood Boone",
+            "email": "wood.boone@notanemailaddress.org",
+            "phone": "+1 (934) 595-2111",
+            "address": "625 Veronica Place, Lewis, Pennsylvania, 4464"
+          }, {
+            "id": 11,
+            "name": "Michelle Ballard",
+            "email": "michelle.ballard@notanemailaddress.org",
+            "phone": "+1 (945) 429-3406",
+            "address": "406 Covert Street, Jessie, Alaska, 5117"
+          }, {
+            "id": 12,
+            "name": "Luann Glass",
+            "email": "luann.glass@notanemailaddress.org",
+            "phone": "+1 (978) 447-3887",
+            "address": "622 Bulwer Place, Macdona, Ohio, 962"
+          }, {
+            "id": 13,
+            "name": "Ross Snow",
+            "email": "ross.snow@notanemailaddress.org",
+            "phone": "+1 (802) 595-2321",
+            "address": "400 Hinsdale Street, Itmann, American Samoa, 2465"
+          }, {
+            "id": 14,
+            "name": "Harriet Peterson",
+            "email": "harriet.peterson@notanemailaddress.org",
+            "phone": "+1 (910) 406-2097",
+            "address": "277 Jewel Street, Grayhawk, Massachusetts, 6997"
+          }, {
+            "id": 15,
+            "name": "Paul Morris",
+            "email": "paul.morris@notanemailaddress.org",
+            "phone": "+1 (971) 499-2719",
+            "address": "365 Montana Place, Riverton, West Virginia, 246"
+          }, {
+            "id": 16,
+            "name": "Esmeralda Campbell",
+            "email": "esmeralda.campbell@notanemailaddress.org",
+            "phone": "+1 (884) 589-2982",
+            "address": "789 Senator Street, Dola, Utah, 2175"
+          }, {
+            "id": 17,
+            "name": "Samantha Donaldson",
+            "email": "samantha.donaldson@notanemailaddress.org",
+            "phone": "+1 (807) 546-3683",
+            "address": "136 Scott Avenue, Carbonville, Indiana, 8592"
+          }, {
+            "id": 18,
+            "name": "Jenny Santos",
+            "email": "jenny.santos@notanemailaddress.org",
+            "phone": "+1 (841) 588-2548",
+            "address": "234 Greenpoint Avenue, Waterford, North Carolina, 8307"
+          }, {
+            "id": 19,
+            "name": "Gilmore Garza",
+            "email": "gilmore.garza@notanemailaddress.org",
+            "phone": "+1 (934) 424-2156",
+            "address": "269 Grand Avenue, Dubois, Alabama, 4351"
+          }, {
+            "id": 20,
+            "name": "Burris Blackburn",
+            "email": "burris.blackburn@notanemailaddress.org",
+            "phone": "+1 (904) 469-2610",
+            "address": "512 Ditmas Avenue, Rivers, Nevada, 7072"
+          }, {
+            "id": 21,
+            "name": "Dunlap Mueller",
+            "email": "dunlap.mueller@notanemailaddress.org",
+            "phone": "+1 (909) 523-3798",
+            "address": "759 Richards Street, Soudan, District Of Columbia, 6543"
+          }, {
+            "id": 22,
+            "name": "Sharon Burns",
+            "email": "sharon.burns@notanemailaddress.org",
+            "phone": "+1 (912) 571-3057",
+            "address": "605 Eldert Lane, Groton, Virginia, 8664"
+          }, {
+            "id": 23,
+            "name": "Norton Gregory",
+            "email": "norton.gregory@notanemailaddress.org",
+            "phone": "+1 (910) 415-2889",
+            "address": "408 Hendrix Street, Fowlerville, Idaho, 2366"
+          }, {
+            "id": 24,
+            "name": "Meghan Lamb",
+            "email": "meghan.lamb@notanemailaddress.org",
+            "phone": "+1 (832) 582-3053",
+            "address": "899 Neptune Court, Cucumber, Kansas, 3556"
+          }, {
+            "id": 25,
+            "name": "Marie Spencer",
+            "email": "marie.spencer@notanemailaddress.org",
+            "phone": "+1 (991) 552-3722",
+            "address": "655 Richardson Street, Hartsville/Hartley, New York, 1930"
+          }, {
+            "id": 26,
+            "name": "Velez Mcclain",
+            "email": "velez.mcclain@notanemailaddress.org",
+            "phone": "+1 (905) 425-2556",
+            "address": "553 Troy Avenue, Orin, Colorado, 146"
+          }, {
+            "id": 27,
+            "name": "Olson Jensen",
+            "email": "olson.jensen@notanemailaddress.org",
+            "phone": "+1 (879) 493-3900",
+            "address": "906 Clifford Place, Stevens, Michigan, 4132"
+          }, {
+            "id": 28,
+            "name": "Latisha Atkins",
+            "email": "latisha.atkins@notanemailaddress.org",
+            "phone": "+1 (907) 424-3931",
+            "address": "443 Kenilworth Place, Adamstown, Montana, 1901"
+          }, {
+            "id": 29,
+            "name": "York Mullen",
+            "email": "york.mullen@notanemailaddress.org",
+            "phone": "+1 (834) 518-2262",
+            "address": "629 Murdock Court, Mahtowa, New Jersey, 2902"
+          }, {
+            "id": 30,
+            "name": "Mooney Higgins",
+            "email": "mooney.higgins@notanemailaddress.org",
+            "phone": "+1 (996) 447-3439",
+            "address": "883 Milton Street, Lavalette, South Carolina, 6915"
+          }, {
+            "id": 31,
+            "name": "Chambers Bolton",
+            "email": "chambers.bolton@notanemailaddress.org",
+            "phone": "+1 (875) 592-2436",
+            "address": "208 Dean Street, Whitestone, Connecticut, 8194"
+          }, {
+            "id": 32,
+            "name": "Bruce Singleton",
+            "email": "bruce.singleton@notanemailaddress.org",
+            "phone": "+1 (801) 472-2973",
+            "address": "311 Prospect Place, Efland, Rhode Island, 514"
+          }, {
+            "id": 33,
+            "name": "Hazel Hawkins",
+            "email": "hazel.hawkins@notanemailaddress.org",
+            "phone": "+1 (885) 575-2662",
+            "address": "662 Schenectady Avenue, Blanford, Oregon, 7680"
+          }, {
+            "id": 34,
+            "name": "Hicks Parks",
+            "email": "hicks.parks@notanemailaddress.org",
+            "phone": "+1 (933) 593-2333",
+            "address": "416 Farragut Place, Outlook, Minnesota, 6422"
+          }, {
+            "id": 35,
+            "name": "Kidd Stokes",
+            "email": "kidd.stokes@notanemailaddress.org",
+            "phone": "+1 (825) 567-3121",
+            "address": "194 Ludlam Place, Gerber, Mississippi, 1937"
+          }, {
+            "id": 36,
+            "name": "Morrow Huber",
+            "email": "morrow.huber@notanemailaddress.org",
+            "phone": "+1 (834) 457-3571",
+            "address": "687 Cyrus Avenue, Sunwest, Nebraska, 7297"
+          }, {
+            "id": 37,
+            "name": "Knowles Carr",
+            "email": "knowles.carr@notanemailaddress.org",
+            "phone": "+1 (936) 422-3747",
+            "address": "355 Dikeman Street, Rosewood, Arizona, 9256"
+          }, {
+            "id": 38,
+            "name": "Denise Cleveland",
+            "email": "denise.cleveland@notanemailaddress.org",
+            "phone": "+1 (837) 442-3108",
+            "address": "220 Lawrence Street, Grantville, Washington, 6071"
+          }, {
+            "id": 39,
+            "name": "Fulton Bright",
+            "email": "fulton.bright@notanemailaddress.org",
+            "phone": "+1 (976) 488-3512",
+            "address": "860 Baughman Place, Gibsonia, Maine, 9481"
+          }, {
+            "id": 40,
+            "name": "Corinne Larson",
+            "email": "corinne.larson@notanemailaddress.org",
+            "phone": "+1 (864) 494-3687",
+            "address": "709 Bath Avenue, Cressey, Kentucky, 240"
+          }, {
+            "id": 41,
+            "name": "Mamie Parsons",
+            "email": "mamie.parsons@notanemailaddress.org",
+            "phone": "+1 (996) 515-2477",
+            "address": "156 Guider Avenue, Tecolotito, Guam, 6712"
+          }, {
+            "id": 42,
+            "name": "Marcia Combs",
+            "email": "marcia.combs@notanemailaddress.org",
+            "phone": "+1 (879) 595-3470",
+            "address": "381 Ash Street, Colton, Illinois, 1215"
+          }, {
+            "id": 43,
+            "name": "Irma Skinner",
+            "email": "irma.skinner@notanemailaddress.org",
+            "phone": "+1 (983) 589-3182",
+            "address": "433 Eckford Street, Thatcher, Delaware, 7795"
+          }, {
+            "id": 44,
+            "name": "Noel Clark",
+            "email": "noel.clark@notanemailaddress.org",
+            "phone": "+1 (856) 403-3748",
+            "address": "157 Sunnyside Court, Dundee, Georgia, 1966"
+          }, {
+            "id": 45,
+            "name": "Daniels Cotton",
+            "email": "daniels.cotton@notanemailaddress.org",
+            "phone": "+1 (886) 444-3030",
+            "address": "370 Ebony Court, Matthews, Maryland, 2411"
+          }, {
+            "id": 46,
+            "name": "Frank Perez",
+            "email": "frank.perez@notanemailaddress.org",
+            "phone": "+1 (851) 446-2924",
+            "address": "424 Cypress Court, Sisquoc, Marshall Islands, 9011"
+          }, {
+            "id": 47,
+            "name": "Kathy Morin",
+            "email": "kathy.morin@notanemailaddress.org",
+            "phone": "+1 (816) 560-2573",
+            "address": "875 Dumont Avenue, Derwood, Louisiana, 7454"
+          }, {
+            "id": 48,
+            "name": "Marguerite Meyer",
+            "email": "marguerite.meyer@notanemailaddress.org",
+            "phone": "+1 (916) 562-3787",
+            "address": "278 Quincy Street, Stouchsburg, Virgin Islands, 5881"
+          }, {
+            "id": 49,
+            "name": "Levy Burt",
+            "email": "levy.burt@notanemailaddress.org",
+            "phone": "+1 (999) 476-3239",
+            "address": "227 Roebling Street, Riviera, Federated States Of Micronesia, 5369"
+          }, {
+            "id": 50,
+            "name": "Taylor Mccarty",
+            "email": "taylor.mccarty@notanemailaddress.org",
+            "phone": "+1 (899) 489-3049",
+            "address": "162 Bowery Street, Jacumba, Puerto Rico, 8155"
+          }]
+        }
+      };
+    }
+  });
+
+</script>

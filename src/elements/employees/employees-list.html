@@ -14,7 +14,7 @@
 <link rel="import" href="../app-popup/app-popup.html">
 
 <!-- import mixins -->
-<link rel="import" href="employee-dexie-service.html">
+<link rel="import" href="mixins/employee-dexie-service.html">
 
 <dom-module id="employees-list">
   <template>
@@ -170,6 +170,7 @@
           });
 
           // TODO: implement pagination
+          // offset = (page - 1) * limit
           // query.offset(this.offset).limit(this.limit).toArray
           query.toArray(this._handleQueryResultData.bind(this));
         } catch (err) {

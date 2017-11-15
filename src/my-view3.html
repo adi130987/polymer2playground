@@ -11,6 +11,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="styles/shared-styles.html">
 
+<link rel="import" href="mixins/helpers/mixin-factory.html">
+<link rel="import" href="mixins/helpers/dummy-data.html">
 <link rel="import" href="mixins/request.html">
 
 <dom-module id="my-view3">
@@ -31,7 +33,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
 
-    class MyView3 extends P2PlaygroundApp.Mixins.Request(Polymer.Element) {
+    /**
+     * @polymer
+     * @mixinFunction
+     */
+    const requiredMixins = P2PlaygroundApp.MixinFactory.combineMixins(
+      [P2PlaygroundApp.Mixins.Request, P2PlaygroundApp.Mixins.DummyData], Polymer.Element);
+
+    class MyView3 extends requiredMixins {
       static get is() { return 'my-view3'; }
 
       connectedCallback() {
