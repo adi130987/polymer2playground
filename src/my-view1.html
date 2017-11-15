@@ -12,7 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="styles/shared-styles.html">
 
 <link rel="import" href="elements/greeting-element/greeting-element.html">
-
+<link rel="import" href="elements/app-panel.html">
 <dom-module id="my-view1">
   <template>
     <style include="shared-styles">
@@ -22,9 +22,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <!--<app-panel panel-title="First panel">-->
+      <!--<p id="testP">First panel title content</p>-->
+    <!--</app-panel>-->
     <div class="card">
       <greeting-element greeting="This is a simple greeting message widget created using Polymer 2.">
         <a href="https://www.polymer-project.org/2.0/docs/devguide/feature-overview">Learn more about Polymer 2</a>
+        <h2 slot="slot1">This is another slotted content</h2>
       </greeting-element>
     </div>
   </template>

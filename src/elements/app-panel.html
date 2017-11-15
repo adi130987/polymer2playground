@@ -1,0 +1,68 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-material/paper-material.html">
+<dom-module id="app-panel">
+  <template>
+    <style>
+      :host {
+        /* host CSS */
+      }
+    </style>
+
+    <paper-material elevation="1">
+      <h1>[[panelTitle]]</h1>
+      <div id="panel-content">
+        <slot></slot>
+      </div>
+    </paper-material>
+
+  </template>
+  <script>
+    class AppPanel extends Polymer.Element {
+
+      static get is() {
+        return 'app-panel';
+      }
+
+      static get properties() {
+        return {
+          panelTitle: {
+            type: String,
+            value: 'Panel Title'
+          }
+        }; // no properties yet
+      }
+
+      // element lifecycle callbacks
+      constructor() {
+        super();
+        console.log('[app-panel] Greeting element created...');
+      }
+
+      ready() {
+        super.ready();
+        console.log('[app-panel] Greeting element ready...');
+        // When possible, use afterNextRender to defer non-critical
+        // work until after first paint.
+        Polymer.RenderStatus.afterNextRender(this, function() {
+
+        });
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        console.log('[app-panel] Greeting element added to DOM...');
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        console.log('[app-panel] Greeting element removed from DOM...');
+      }
+
+      attributeChangedCallback(attributeName) {
+        console.log('[app-panel] ' + attributeName + ' value has been updated...');
+      }
+    }
+
+    window.customElements.define(AppPanel.is, AppPanel);
+  </script>
+</dom-module>
